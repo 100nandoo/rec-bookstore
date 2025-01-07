@@ -1,6 +1,7 @@
 <script>
 	let { data } = $props();
 	let searchQuery = $state({ value: '' });
+	let isGridView = $state(false); // True for grid view, false for list view
 
 	// Reactive effect to filter books when searchQuery changes
 	let result = $derived.by(() => {
@@ -31,20 +32,38 @@
 		/>
 	</div>
 
+	<!-- Toggle Button for Grid/List View -->
+	<div class="mb-4 flex hidden justify-center md:flex">
+		<button class="btn btn-secondary mr-2" onclick={() => (isGridView = false)}> List View </button>
+		<button class="btn btn-primary" onclick={() => (isGridView = true)}> Grid View </button>
+	</div>
+
 	<h1 class="mb-8 text-center text-3xl font-bold text-primary">Book List</h1>
 
-	<div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+	<!-- Display Books in Grid or List View -->
+	<div class={isGridView ? 'grid grid-cols-1 gap-2 md:grid-cols-2' : 'space-y-2'}>
 		{#each result as book}
-			<div class="card bg-neutral text-neutral-content shadow-xl">
-				<div class="card-body">
-					<h2 class="card-title text-primary">{book.title}</h2>
-					<p class="text-gray">
-						<span class="font-medium">Author:</span>
-						{book.author}
-					</p>
-					<p class="mt-2 text-xl font-bold text-secondary">
-						<span class="font-medium">Price:</span> ${book.price}
-					</p>
+			<div
+				class={isGridView
+					? 'card bg-neutral text-neutral-content shadow-xl'
+					: 'bg-neutral text-neutral-content shadow-xl'}
+			>
+				<div class={isGridView ? 'card-body' : ' p-4'}>
+					<div class="flex items-center justify-between">
+						<div class="flex flex-col">
+							<h2
+								class={isGridView ? 'card-title text-primary' : 'card-title text-lg text-primary'}
+							>
+								{book.title}
+							</h2>
+							<p class="text-gray text-sm">
+								<span class="font-medium">{book.author}</span>
+							</p>
+						</div>
+						<p class="ml-4 mt-1 text-right font-bold text-secondary">
+							<span class="font-medium">${book.price}</span>
+						</p>
+					</div>
 				</div>
 			</div>
 		{/each}

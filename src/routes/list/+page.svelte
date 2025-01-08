@@ -42,11 +42,11 @@
 
 	<!-- Display Books in Grid or List View -->
 	<div class={isGridView ? 'grid grid-cols-1 gap-2 md:grid-cols-2' : 'space-y-2'}>
-		{#each result as book}
+		{#each result as book (book.id)}
 			<div
 				class={isGridView
-					? 'card bg-neutral text-neutral-content shadow-xl'
-					: 'bg-neutral text-neutral-content shadow-xl'}
+					? 'card text-neutral-content shadow-lg'
+					: 'card text-neutral-content shadow-lg'}
 			>
 				<div class={isGridView ? 'card-body' : ' p-4'}>
 					<div class="flex items-center justify-between">
@@ -56,7 +56,7 @@
 							>
 								{book.title}
 							</h2>
-							<p class="text-gray text-sm">
+							<p class="text-sm text-accent">
 								<span class="font-medium">{book.author}</span>
 							</p>
 						</div>

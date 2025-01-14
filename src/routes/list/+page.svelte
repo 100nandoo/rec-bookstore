@@ -50,9 +50,7 @@
 			<div class={isGridView ? 'card-body' : ' p-4'}>
 				<div class="flex items-center justify-between">
 					<div class="flex flex-col">
-						<h2
-							class={isGridView ? 'card-title text-primary' : 'card-title text-lg text-primary'}
-						>
+						<h2 class={isGridView ? 'card-title text-primary' : 'card-title text-lg text-primary'}>
 							{book.title}
 						</h2>
 						<p class="text-sm text-accent">

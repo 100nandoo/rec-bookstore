@@ -19,6 +19,6 @@
 		<ThemeSwitcher />
 	</ul>
 </nav>
-<div class="container mx-auto p-8 max-w-screen-lg">
+<div class="container mx-auto max-w-screen-lg p-8">
 	{@render children()}
 </div>

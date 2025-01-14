@@ -14,8 +14,11 @@
 	<ul class="flex items-center space-x-4 p-2 text-lg">
 		<!-- <li><a href="/" class="hover:text-primary">Home</a></li> -->
 		<li><a href="/list" class="hover:text-primary">Book List</a></li>
+		<li><a href="/scanner" class="hover:text-primary">Scanner</a></li>
 		<li class="flex-1"></li>
 		<ThemeSwitcher />
 	</ul>
 </nav>
-{@render children()}
+<div class="container mx-auto p-8 max-w-screen-lg">
+	{@render children()}
+</div>

@@ -7,11 +7,12 @@
         Html5QrcodeSupportedFormats
     } from 'html5-qrcode';
 
-    let { class: klass, width, height, isPaused = $bindable() } = $props();
+    let { class: klass, width, height, isPaused = $bindable(), scanResult = $bindable() } = $props();
     let scanner: Html5QrcodeScanner;
 
     function scanSuccess(decodedText :string, decodedResult:Html5QrcodeResult) {
         console.log(`Code matched = ${decodedText}`, decodedResult);
+        scanResult = decodedText
         scanner?.pause(true)
         isPaused = true
     }

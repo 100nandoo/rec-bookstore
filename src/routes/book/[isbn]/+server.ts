@@ -6,7 +6,7 @@ export async function GET(event) {
 	console.log("param:" + isbn);
 
 	const { data, error } = await supabase.from('book').select().eq('isbn', isbn.trim()).single();
-	console.log("data:" + data?.title);
+	console.log("data:" + data.title);
 
 	if (error) {
 		console.error('Error fetching data:', error.message);

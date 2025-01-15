@@ -1,50 +1,56 @@
 <script>
 	import QrCodeScanner from '../../lib/components/QrCodeScanner.svelte';
+	import Book from '$lib/components/Book.svelte';
+	import { ScanState } from '$lib/misc/ScanState.js';
 
-	let isPaused = $state(false);
+	let scanState = $state(ScanState.SCANNING);
+
 	let scanResult = $state('');
-	let formatted = $derived(scanResult.replace(/^(\d)(\d{6})(\d{6})$/, '$1-$2-$3'));
+	let formatted = $derived.by(() => {
+		if (scanResult){
+			scanResult.replace(/^(\d)(\d{6})(\d{6})$/, '$1-$2-$3')
+		}
+	});
 	let qrCodeScanner = $state();
-	let result = $state();
-    let showResult = $state(false);
+	let isGridView = false;
 
 	function onclick() {
 		qrCodeScanner.resume();
 	}
 
-    async function findBook() {
-		const response = await fetch('/book/' + scanResult);
-		result = await response.json();
-        if(result) {
-            showResult = true;
-        }
+	async function findBook() {
+		if (scanResult){
+			const response = await fetch('/book/' + scanResult);
+			book = await response.json();
+			return book;
+		}
+		return null
 	}
+
+	let book = $derived.by(() => {
+		if (scanState === ScanState.RESULT) {
+			return findBook();
+		}
+	});
 </script>
 
-<QrCodeScanner
-	width={320}
-	height={320}
-	class="mx-auto max-w-sm rounded-lg bg-slate-700"
-	bind:isPaused
-	bind:scanResult
-	bind:this={qrCodeScanner}
-/>
 
-<div class="text-center">
-    <div class="mx-auto flex flex-col items-center {isPaused ? 'visible' : 'hidden'}">
-        <p class="mt-4 text-lg text-primary">{formatted}</p>
-        
-        <button class="btn btn-primary mt-4" {onclick}>Scan Again</button>
-    </div>
-
-    <button class="btn btn-secondary mt-4" onclick={findBook}>Submit</button>
-
-    {#if showResult}
-        <div class="flex flex-row gap-8 mt-4 justify-center">
-            <h1 class="text-4xl text-primary font-bold">{result.title}</h1>
-            <p class="text-4xl text-right font-bold text-secondary">
-                <span class="font-medium">${result.price}</span>
-            </p>
-        </div>
-    {/if}
+<div class="text-center mx-auto">
+	<QrCodeScanner
+		width={320}
+		height={320}
+		class="w-full max-w-screen-sm mx-auto rounded-lg bg-slate-700"
+		bind:scanState
+		bind:scanResult
+		bind:this={qrCodeScanner}
+	/>
+	<div class="flex flex-col items-center gap-y-4 mt-4">
+		{#if scanState === ScanState.RESULT}
+			<button class="btn btn-primary" {onclick}>Scan Again</button>
+		{/if}
+		<p class="text-lg text-primary">{formatted}</p>
+		{#if book}
+			<Book {book} {isGridView} />
+		{/if}
+	</div>
 </div>

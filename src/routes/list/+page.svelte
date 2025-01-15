@@ -1,4 +1,6 @@
 <script>
+	import Book from '$lib/components/Book.svelte';
+
 	let { data } = $props();
 	let searchQuery = $state({ value: '' });
 	let isGridView = $state(false); // True for grid view, false for list view
@@ -48,19 +50,7 @@
 				: 'card text-neutral-content shadow-lg'}
 		>
 			<div class={isGridView ? 'card-body' : ' p-4'}>
-				<div class="flex items-center justify-between">
-					<div class="flex flex-col">
-						<h2 class={isGridView ? 'card-title text-primary' : 'card-title text-lg text-primary'}>
-							{book.title}
-						</h2>
-						<p class="text-sm text-accent">
-							<span class="font-medium">{book.author}</span>
-						</p>
-					</div>
-					<p class="ml-4 mt-1 text-right font-bold text-secondary">
-						<span class="font-medium">${book.price}</span>
-					</p>
-				</div>
+				<Book {book} {isGridView}></Book>
 			</div>
 		</div>
 	{/each}

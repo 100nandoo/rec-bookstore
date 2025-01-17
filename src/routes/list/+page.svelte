@@ -35,8 +35,8 @@
 
 <!-- Toggle Button for Grid/List View -->
 <div class="mb-4 flex hidden justify-center md:flex">
-	<button class="btn btn-secondary mr-2" onclick={() => (isGridView = false)}> List View </button>
-	<button class="btn btn-primary" onclick={() => (isGridView = true)}> Grid View </button>
+	<button class="btn btn-secondary mr-2" onclick={() => (isGridView = false)}> List View</button>
+	<button class="btn btn-primary" onclick={() => (isGridView = true)}> Grid View</button>
 </div>
 
 <h1 class="mb-8 text-center text-3xl font-bold text-primary">Book List</h1>
@@ -44,14 +44,6 @@
 <!-- Display Books in Grid or List View -->
 <div class={isGridView ? 'grid grid-cols-1 gap-2 md:grid-cols-2' : 'space-y-2'}>
 	{#each result as book (book.id)}
-		<div
-			class={isGridView
-				? 'card text-neutral-content shadow-lg'
-				: 'card text-neutral-content shadow-lg'}
-		>
-			<div class={isGridView ? 'card-body' : ' p-4'}>
-				<Book {book} {isGridView}></Book>
-			</div>
-		</div>
+		<Book {book} {isGridView}></Book>
 	{/each}
 </div>

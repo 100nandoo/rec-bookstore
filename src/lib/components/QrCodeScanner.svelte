@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { Html5QrcodeScanner, Html5QrcodeScanType, Html5QrcodeSupportedFormats } from 'html5-qrcode';
+	import {
+		Html5QrcodeScanner,
+		Html5QrcodeScanType,
+		Html5QrcodeSupportedFormats
+	} from 'html5-qrcode';
 	import { ScanState } from '$lib/misc/ScanState';
 
 	let { class: klass, width, height, scanState = $bindable(), scanResult = $bindable() } = $props();
@@ -40,23 +44,23 @@
 <div id="qr-scanner" class={klass}></div>
 
 <style>
-    /* Hide unwanted icons */
-    #qr-scanner :global(img[alt='Info icon']),
-    #qr-scanner :global(img[alt='Camera based scan']) {
-        display: none;
-    }
+	/* Hide unwanted icons */
+	#qr-scanner :global(img[alt='Info icon']),
+	#qr-scanner :global(img[alt='Camera based scan']) {
+		display: none;
+	}
 
-    /* Change camera permission button text */
-    #qr-scanner :global(#html5-qrcode-button-camera-permission) {
-        visibility: hidden;
-    }
+	/* Change camera permission button text */
+	#qr-scanner :global(#html5-qrcode-button-camera-permission) {
+		visibility: hidden;
+	}
 
-    #qr-scanner :global(#html5-qrcode-button-camera-permission::after) {
-        position: absolute;
-        inset: auto 0 0;
-        display: block;
-        content: 'Allow camera access';
-        visibility: visible;
-        padding: 10px 0;
-    }
+	#qr-scanner :global(#html5-qrcode-button-camera-permission::after) {
+		position: absolute;
+		inset: auto 0 0;
+		display: block;
+		content: 'Allow camera access';
+		visibility: visible;
+		padding: 10px 0;
+	}
 </style>

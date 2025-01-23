@@ -19,7 +19,13 @@
 		theme="dark"
 		appearance={{
 			theme: ThemeSupa,
-			style: { input: 'color: #fff' }
+			style: {
+				input:
+					'color: hsl(var(--pc)); background-color: hsl(var(--b1)); border-color: hsl(var(--bc));',
+				button: 'background-color: hsl(var(--p)); color: hsl(var(--pc));',
+				label: 'color: hsl(var(--bc));',
+				container: 'background-color: hsl(var(--b1));'
+			}
 		}}
 	/>
 </div>

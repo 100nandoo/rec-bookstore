@@ -7,7 +7,7 @@ import type { Config } from 'tailwindcss';
 export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	daisyui: {
-		themes: ['sunset', 'fantasy']
+		themes: ['sunset', 'light']
 	},
 	theme: {
 		extend: {}

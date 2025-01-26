@@ -17,6 +17,8 @@
 	<Auth
 		supabaseClient={supabase}
 		theme="dark"
+		view="sign_in"
+		showLinks={false}
 		appearance={{
 			theme: ThemeSupa,
 			style: {

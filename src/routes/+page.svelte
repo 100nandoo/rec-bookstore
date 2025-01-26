@@ -1,7 +1,6 @@
 <script>
 	import { sessionStore } from '$lib/state';
-	import { get } from 'svelte/store';
-	const session = get(sessionStore);
+	const session = $sessionStore;
 </script>
 
 <div class="hero min-h-[50vh] bg-base-300">

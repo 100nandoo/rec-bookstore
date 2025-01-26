@@ -9,8 +9,8 @@ type CookieOptions = {
 	domain?: string;
 	maxAge?: number;
 	secure?: boolean;
-	httpOnly?: boolean; // Not applicable in browser
-	sameSite?: 'Strict' | 'Lax' | 'None';
+	httpOnly?: boolean;
+	sameSite?: 'strict' | 'lax' | 'none';
 };
 
 export const load: LayoutLoad = async ({ fetch, data, depends }: any) => {
@@ -21,32 +21,21 @@ export const load: LayoutLoad = async ({ fetch, data, depends }: any) => {
 			fetch
 		},
 		cookies: {
-			getAll: (): { name: string; value: string }[] | null => {
+			get: (key) => {
 				if (!isBrowser()) {
-					// On the server, return the session data as a cookie array
-					return [{ name: 'session', value: JSON.stringify(data.session) }];
+					return JSON.stringify(data.session);
 				}
-
-				// In the browser, parse `document.cookie` and return an array
 				const cookies = parse(document.cookie);
-				return Object.entries(cookies).map(([name, value]) => ({ name, value }));
+				return cookies[key];
 			},
-			setAll: (cookies: { name: string; value: string; options: CookieOptions }[]): void => {
+			set: (key, value, options) => {
 				if (isBrowser()) {
-					// Set cookies in the browser
-					cookies.forEach(({ name, value, options }) => {
-						const { path = '/', domain, maxAge, secure, sameSite } = options;
-
-						// Build cookie string
-						let cookieString = `${name}=${value}; Path=${path}`;
-						if (domain) cookieString += `; Domain=${domain}`;
-						if (maxAge) cookieString += `; Max-Age=${maxAge}`;
-						if (secure) cookieString += `; Secure`;
-						if (sameSite) cookieString += `; SameSite=${sameSite}`;
-
-						// Set the cookie
-						document.cookie = cookieString;
-					});
+					document.cookie = `${key}=${value}; path=/; max-age=${60 * 60 * 24 * 365}; sameSite=Lax`;
+				}
+			},
+			remove: (key, options) => {
+				if (isBrowser()) {
+					document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 				}
 			}
 		}

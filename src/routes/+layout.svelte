@@ -7,28 +7,39 @@
 	import { sessionStore } from '$lib/state';
 	import { get } from 'svelte/store';
 
-	let session = $state(get(sessionStore));
+	let { data, children } = $props();
+	let { supabase } = data;
+	let session = $state(data.session);
 
+	sessionStore.set(data.session);
 	sessionStore.subscribe((value) => {
 		session = value;
 	});
 
-	let { data, children } = $props();
-	let { supabase } = data;
-
-	supabase.auth.onAuthStateChange(async (event, session) => {
+	supabase.auth.onAuthStateChange(async (event, _session) => {
 		if (event === 'SIGNED_IN') {
-			sessionStore.set(session);
+			sessionStore.set(_session);
+			session = _session;
 			await goto('list');
 		}
 
 		if (event === 'SIGNED_OUT') {
-			sessionStore.set(session);
+			sessionStore.set(null);
+			session = null;
 			await goto('login');
 		}
 	});
 
-	onMount(() => themeChange());
+	onMount(async () => {
+		themeChange();
+		const {
+			data: { session: initialSession }
+		} = await supabase.auth.getSession();
+		if (initialSession) {
+			sessionStore.set(initialSession);
+			session = initialSession;
+		}
+	});
 </script>
 
 <div class="navbar bg-base-300">

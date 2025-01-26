@@ -10,6 +10,7 @@
 	let bookFromUrl = $state();
 	let showConfirmDialog = $state(false);
 	let showButton = false;
+	let showSuccess = $state(false);
 
 	// Get book from URL parameters if it exists
 	$effect(() => {
@@ -50,6 +51,12 @@
 					console.error('Error updating row:', error);
 				} else {
 					console.log('Row updated successfully');
+					showSuccess = true;
+					setTimeout(() => {
+						showSuccess = false;
+						goto('/list');
+					}, 3000);
+					return;
 				}
 
 				// Navigate back to the list page after successful save
@@ -63,8 +70,8 @@
 	async function findBook() {
 		if (scanResult) {
 			const response = await fetch('/book/' + scanResult);
-			book = await response.json();
-			return book;
+			const bookData = await response.json();
+			return bookData;
 		}
 		return null;
 	}
@@ -88,6 +95,11 @@
 </script>
 
 <div class="mx-auto text-center">
+	{#if showSuccess}
+		<div role="alert" class="alert alert-success mb-4">
+			<span>ISBN successfully added to book!</span>
+		</div>
+	{/if}
 	{#if bookFromUrl}
 		<div class="mb-4">
 			<h3 class="text-lg font-semibold">Adding ISBN to:</h3>

@@ -23,9 +23,16 @@ jobs:
           SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: |
           RANDOM_NAME=$(uuidgen)
+          echo "Generated UUID: $RANDOM_NAME"
 
-          curl -X PATCH "$SUPABASE_URL/rest/v1/dummy?id=eq.1" \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X PATCH "$SUPABASE_URL/rest/v1/dummy?id=eq.1" \
             -H "apikey: $SUPABASE_KEY" \
             -H "Authorization: Bearer $SUPABASE_KEY" \
             -H "Content-Type: application/json" \
-            -d "{\"name\": \"$RANDOM_NAME\"}"
+            -d "{\"name\": \"$RANDOM_NAME\"}")
+
+          BODY=$(echo "$RESPONSE" | head -n 1)
+          STATUS=$(echo "$RESPONSE" | tail -n 1)
+
+          echo "HTTP Status: $STATUS"
+          echo "Response Body: $BODY"

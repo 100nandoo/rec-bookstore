@@ -5,7 +5,6 @@
 	import { onMount } from 'svelte';
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
 	import { sessionStore } from '$lib/state';
-	import { get } from 'svelte/store';
 
 	let { data, children } = $props();
 	let { supabase } = data;

@@ -4,16 +4,7 @@ import { PUBLIC_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public';
 
 export const ssr = false;
 
-type CookieOptions = {
-	path?: string;
-	domain?: string;
-	maxAge?: number;
-	secure?: boolean;
-	httpOnly?: boolean;
-	sameSite?: 'strict' | 'lax' | 'none';
-};
-
-export const load: LayoutLoad = async ({ fetch, data, depends }: any) => {
+export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 	depends('supabase:auth');
 
 	const supabase = createBrowserClient(PUBLIC_SUPABASE_URL, PUBLIC_ANON_KEY, {
@@ -28,12 +19,12 @@ export const load: LayoutLoad = async ({ fetch, data, depends }: any) => {
 				const cookies = parse(document.cookie);
 				return cookies[key];
 			},
-			set: (key, value, options) => {
+			set: (key, value) => {
 				if (isBrowser()) {
 					document.cookie = `${key}=${value}; path=/; max-age=${60 * 60 * 24 * 365}; sameSite=Lax`;
 				}
 			},
-			remove: (key, options) => {
+			remove: (key) => {
 				if (isBrowser()) {
 					document.cookie = `${key}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
 				}

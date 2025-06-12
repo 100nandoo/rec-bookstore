@@ -109,7 +109,7 @@
 	<QrCodeScanner
 		width={320}
 		height={320}
-		class="mx-auto w-full max-w-screen-sm rounded-lg bg-slate-700"
+		class="mx-auto w-full max-w-(--breakpoint-sm) rounded-lg bg-slate-700"
 		bind:scanState
 		bind:scanResult
 		bind:this={qrCodeScanner}
@@ -118,7 +118,7 @@
 		{#if scanState === ScanState.RESULT}
 			<button class="btn btn-primary" {onclick}>Scan Again</button>
 		{/if}
-		<p class="text-lg text-primary">{formatted}</p>
+		<p class="text-primary text-lg">{formatted}</p>
 		{#if book && !bookFromUrl}
 			<Book {book} {isGridView} {showButton} />
 		{/if}
@@ -126,8 +126,8 @@
 </div>
 
 {#if showConfirmDialog}
-	<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-		<div class="rounded-lg bg-base-100 p-6 shadow-xl">
+	<div class="bg-opacity-50 fixed inset-0 flex items-center justify-center bg-black">
+		<div class="bg-base-100 rounded-lg p-6 shadow-xl">
 			<h3 class="mb-4 text-lg font-bold">Confirm ISBN</h3>
 			<p class="mb-4">Do you want to save ISBN {scanResult} to this book?</p>
 			<div class="flex justify-end gap-4">

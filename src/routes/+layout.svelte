@@ -61,14 +61,11 @@
 					/>
 				</svg>
 			</div>
-			<ul
-				tabindex="0"
-				class="menu dropdown-content menu-sm z-[1] mt-3 w-52 rounded-box bg-base-100 p-2 shadow"
-			>
+			<ul class="menu dropdown-content menu-sm rounded-box bg-base-100 z-1 mt-3 w-52 p-2 shadow-sm">
 				<li><a href="/" class="hover:text-primary">Home</a></li>
 				<li><a href="/list" class="hover:text-primary">Book List</a></li>
 				<li><a href="/scanner" class="hover:text-primary">Scanner</a></li>
-				<li><a href="">{session?.user?.email}</a></li>
+				<li><span>{session?.user?.email}</span></li>
 			</ul>
 		</div>
 	</div>
@@ -77,20 +74,21 @@
 			<li><a href="/" class="hover:text-primary">Home</a></li>
 			<li><a href="/list" class="hover:text-primary">Book List</a></li>
 			<li><a href="/scanner" class="hover:text-primary">Scanner</a></li>
-			<li><a href="">{session?.user?.email}</a></li>
+			<li><span>{session?.user?.email}</span></li>
 		</ul>
 	</div>
 	<div class="navbar-end">
 		<div class="menu menu-sm flex flex-row items-center gap-4">
 			{#if session}
 				<li>
-					<a
-						href=""
+					<button
 						onclick={async () => {
 							await supabase.auth.signOut();
 						}}
-						class="hover:text-primary">Logout</a
+						class="hover:text-primary cursor-pointer border-none bg-transparent"
 					>
+						Logout
+					</button>
 				</li>
 			{:else}
 				<li><a href="/login" class="hover:text-primary">Login</a></li>
@@ -100,6 +98,6 @@
 	</div>
 </div>
 
-<div class="container mx-auto max-w-screen-lg p-8">
+<div class="container mx-auto max-w-(--breakpoint-lg) p-8">
 	{@render children()}
 </div>

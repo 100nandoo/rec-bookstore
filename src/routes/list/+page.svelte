@@ -39,7 +39,7 @@
 	<button class="btn btn-primary" onclick={() => (isGridView = true)}> Grid View</button>
 </div>
 
-<h1 class="mb-8 text-center text-3xl font-bold text-primary">Book List</h1>
+<h1 class="text-primary mb-8 text-center text-3xl font-bold">Book List</h1>
 
 <!-- Display Books in Grid or List View -->
 <div class={isGridView ? 'grid grid-cols-1 gap-2 md:grid-cols-2' : 'space-y-2'}>

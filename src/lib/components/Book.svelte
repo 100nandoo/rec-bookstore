@@ -11,26 +11,24 @@
 </script>
 
 <div
-	class="card p-4 text-neutral-content shadow-lg {showButton
-		? 'transition duration-200 ease-in-out hover:-translate-y-2 hover:bg-base-300 hover:shadow-2xl'
-		: ''}"
+	class="card text-neutral-content hover:bg-base-300 p-4 shadow-lg transition duration-200 ease-in-out hover:-translate-y-2 hover:shadow-2xl"
 >
 	<div class="flex items-center justify-between p-4">
 		<div class="flex flex-col">
-			<h2 class={isGridView ? 'card-title text-primary' : 'card-title text-lg text-primary'}>
+			<h2 class={isGridView ? 'card-title text-primary' : 'card-title text-primary text-lg'}>
 				{book.title}
 			</h2>
-			<p class="text-sm text-accent">
+			<p class="text-accent text-sm">
 				<span class="font-medium">{book.author}</span>
 			</p>
 			{#if book.isbn}
-				<p class="text-xs text-secondary">
+				<p class="text-secondary text-xs">
 					ISBN: {book.isbn}
 				</p>
 			{/if}
 		</div>
 		<div class="flex flex-col items-end">
-			<p class="ml-4 mt-1 text-right font-bold text-secondary">
+			<p class="text-secondary mt-1 ml-4 text-right font-bold">
 				<span class="font-medium">${book.price}</span>
 			</p>
 			{#if showButton && !book.isbn}

@@ -21,6 +21,12 @@
 			<p class="text-accent text-sm">
 				<span class="font-medium">{book.author}</span>
 			</p>
+			<p class="text-base-content text-sm">
+				<span class="font-light">Twpc:</span>
+				<span class="text-base font-medium">{book.stock_twpc}</span>
+				<span class="font-light">Alex:</span>
+				<span class="text-base font-medium">{book.stock_alex}</span>
+			</p>
 			{#if book.isbn}
 				<p class="text-secondary text-xs">
 					ISBN: {book.isbn}

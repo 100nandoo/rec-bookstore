@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 
-	const themes = ['sunset', 'light'];
+	const themes = ['dark', 'light'];
 
 	let selectedTheme: string;
 

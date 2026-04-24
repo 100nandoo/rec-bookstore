@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { supabase } from '$lib/supabase/supabaseClient';
 	import { roleStore } from '$lib/state';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
+
+	let { data } = $props();
+	let { supabase } = data;
 
 	const role = $roleStore;
 	if (browser && role !== 'admin') goto('/list');
@@ -14,6 +16,14 @@
 		stock_twpc: number;
 		stock_alex: number;
 		isbn: string | null;
+		pages: number | null;
+		dimensions: string | null;
+		weight: number | null;
+		publisher: string | null;
+		published_date: string | null;
+		description: string | null;
+		topics: string[] | null;
+		pictures: string[] | null;
 	};
 
 	let activeTab = $state<'import' | 'export'>('import');
@@ -45,14 +55,22 @@
 	function parseCSV(text: string): Book[] {
 		const lines = text.trim().split('\n').filter(Boolean);
 		return lines.slice(1).map((line) => {
-			const [title, author, price, stock_twpc, stock_alex, isbn] = splitCSVLine(line);
+			const [title, author, price, stock_twpc, stock_alex, isbn, pages, dimensions, weight, publisher, published_date, description, topics, pictures] = splitCSVLine(line);
 			return {
 				title: title?.trim() ?? '',
 				author: author?.trim() ?? '',
 				price: parseFloat(price?.trim().replace(/[^0-9.]/g, '') ?? '0') || 0,
 				stock_twpc: parseInt(stock_twpc?.trim() ?? '0'),
 				stock_alex: parseInt(stock_alex?.trim() ?? '0'),
-				isbn: isbn?.trim() || null
+				isbn: isbn?.trim() || null,
+				pages: pages?.trim() ? parseInt(pages.trim()) : null,
+				dimensions: dimensions?.trim() || null,
+				weight: weight?.trim() ? parseFloat(weight.trim()) : null,
+				publisher: publisher?.trim() || null,
+				published_date: published_date?.trim() || null,
+				description: description?.trim() || null,
+				topics: topics?.trim() ? topics.trim().split('|').map((t) => t.trim()).filter(Boolean) : null,
+				pictures: pictures?.trim() ? pictures.trim().split('|').map((p) => p.trim()).filter(Boolean) : null
 			};
 		});
 	}
@@ -100,13 +118,33 @@
 		}
 	}
 
+	function csvCell(v: unknown): string {
+		const s = String(v ?? '');
+		return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g, '""')}"` : s;
+	}
+
 	async function exportCSV() {
-		const { data } = await supabase.from('book').select();
-		if (!data?.length) return;
-		const header = 'title,author,price,stock_twpc,stock_alex,isbn';
-		const rows = data.map((b) =>
-			[b.title, b.author, b.price, b.stock_twpc, b.stock_alex, b.isbn ?? '']
-				.map((v) => (String(v).includes(',') ? `"${v}"` : v))
+		const { data: books } = await supabase.from('book').select();
+		if (!books?.length) return;
+		const header = 'title,author,price,stock_twpc,stock_alex,isbn,pages,dimensions,weight,publisher,published_date,description,topics,pictures';
+		const rows = books.map((b) =>
+			[
+				b.title,
+				b.author,
+				b.price,
+				b.stock_twpc,
+				b.stock_alex,
+				b.isbn ?? '',
+				b.pages ?? '',
+				b.dimensions ?? '',
+				b.weight ?? '',
+				b.publisher ?? '',
+				b.published_date ?? '',
+				b.description ?? '',
+				Array.isArray(b.topics) ? b.topics.join('|') : '',
+				Array.isArray(b.pictures) ? b.pictures.join('|') : ''
+			]
+				.map(csvCell)
 				.join(',')
 		);
 		const csv = [header, ...rows].join('\n');
@@ -142,8 +180,9 @@
 	{#if activeTab === 'import'}
 		<div class="mb-4">
 			<p class="text-base-content mb-2 text-sm">
-				Upload a CSV file with columns: <code>title, author, price, stock_twpc, stock_alex, isbn</code>
+				Upload a CSV file with columns: <code>title, author, price, stock_twpc, stock_alex, isbn, pages, dimensions, weight, publisher, published_date, description, topics, pictures</code>
 			</p>
+			<p class="text-base-content/60 mb-2 text-xs">Array fields (topics, pictures) should be pipe-separated (e.g. <code>topic1|topic2</code>).</p>
 			<input
 				type="file"
 				accept=".csv"
@@ -181,6 +220,14 @@
 							<th>Stock TWPC</th>
 							<th>Stock Alex</th>
 							<th>ISBN</th>
+							<th>Pages</th>
+							<th>Dimensions</th>
+							<th>Weight</th>
+							<th>Publisher</th>
+							<th>Published Date</th>
+							<th>Description</th>
+							<th>Topics</th>
+							<th>Pictures</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -192,6 +239,14 @@
 								<td>{book.stock_twpc}</td>
 								<td>{book.stock_alex}</td>
 								<td>{book.isbn ?? '-'}</td>
+								<td>{book.pages ?? '-'}</td>
+								<td>{book.dimensions ?? '-'}</td>
+								<td>{book.weight ?? '-'}</td>
+								<td>{book.publisher ?? '-'}</td>
+								<td>{book.published_date ?? '-'}</td>
+								<td class="max-w-xs truncate">{book.description ?? '-'}</td>
+								<td>{book.topics?.join(', ') ?? '-'}</td>
+								<td>{book.pictures?.length ? `${book.pictures.length} image(s)` : '-'}</td>
 							</tr>
 						{/each}
 					</tbody>

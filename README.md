@@ -36,3 +36,24 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Local
+
+To run locally with supabase local:
+
+### Install docker
+
+### Run supabase:
+```bash
+npx supabase start
+```
+
+### Run migration local:
+
+```bash
+npx supabase db push
+```
+
+### Access supabase local 
+
+Open `http://127.0.0.1:54323/` or URL given in the `PUBLIC_SUPABASE_URL`

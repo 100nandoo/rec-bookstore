@@ -8,7 +8,7 @@
 	$: ({ supabase, session } = data);
 
 	$: if (session) {
-		goto('/');
+		goto('/list');
 	}
 </script>
 

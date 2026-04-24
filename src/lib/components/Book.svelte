@@ -1,7 +1,7 @@
 <script>
 	import { sessionStore } from '$lib/state';
 	const session = $sessionStore;
-	let { book, isGridView = false, showButton } = $props();
+	let { book, isGridView = false, showButton = undefined } = $props();
 	showButton = showButton ?? session?.user?.email;
 	import { goto } from '$app/navigation';
 
@@ -13,7 +13,7 @@
 <div
 	class="card text-neutral-content hover:bg-base-300 p-4 shadow-lg transition duration-200 ease-in-out hover:-translate-y-2 hover:shadow-2xl"
 >
-	<div class="flex items-center justify-between p-4">
+	<div class="flex items-center justify-between p-4" role="button" tabindex="0" onclick={() => goto('/list/' + book.id)} onkeydown={(e) => e.key === 'Enter' && goto('/list/' + book.id)}>
 		<div class="flex flex-col">
 			<h2 class={isGridView ? 'card-title text-primary' : 'card-title text-primary text-lg'}>
 				{book.title}
@@ -38,7 +38,7 @@
 				<span class="font-medium">${book.price}</span>
 			</p>
 			{#if showButton && !book.isbn}
-				<button class="btn btn-primary btn-sm mt-2" onclick={handleAddIsbn}>Add ISBN</button>
+				<button class="btn btn-primary btn-sm mt-2" onclick={(e) => { e.stopPropagation(); handleAddIsbn(); }}>Add ISBN</button>
 			{/if}
 		</div>
 	</div>

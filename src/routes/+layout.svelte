@@ -4,27 +4,41 @@
 	import { themeChange } from 'theme-change';
 	import { onMount } from 'svelte';
 	import ThemeSwitcher from '$lib/components/ThemeSwitcher.svelte';
-	import { sessionStore } from '$lib/state';
+	import { sessionStore, roleStore } from '$lib/state';
 
 	let { data, children } = $props();
 	let { supabase } = data;
 	let session = $state(data.session);
+	let role = $state(data.role);
 
 	sessionStore.set(data.session);
-	sessionStore.subscribe((value) => {
-		session = value;
-	});
+	roleStore.set(data.role);
+
+	sessionStore.subscribe((value) => { session = value; });
+	roleStore.subscribe((value) => { role = value; });
 
 	supabase.auth.onAuthStateChange(async (event, _session) => {
 		if (event === 'SIGNED_IN') {
 			sessionStore.set(_session);
 			session = _session;
+			if (_session) {
+				const { data: profile } = await supabase
+					.from('profiles')
+					.select('role')
+					.eq('id', _session.user.id)
+					.single();
+				const r = (profile?.role as 'admin' | 'user') ?? 'user';
+				roleStore.set(r);
+				role = r;
+			}
 			await goto('list');
 		}
 
 		if (event === 'SIGNED_OUT') {
 			sessionStore.set(null);
+			roleStore.set(null);
 			session = null;
+			role = null;
 			await goto('login');
 		}
 	});
@@ -64,6 +78,9 @@
 				<li><a href="/" class="hover:text-primary">Home</a></li>
 				<li><a href="/list" class="hover:text-primary">Book List</a></li>
 				<li><a href="/scanner" class="hover:text-primary">Scanner</a></li>
+				{#if session}<li><a href="/transaction" class="hover:text-primary">Transaction</a></li>{/if}
+				{#if role === 'admin'}<li><a href="/report" class="hover:text-primary">Report</a></li>{/if}
+				{#if role === 'admin'}<li><a href="/import" class="hover:text-primary">Import/Export</a></li>{/if}
 				<li><span>{session?.user?.email}</span></li>
 			</ul>
 		</div>
@@ -73,6 +90,9 @@
 			<li><a href="/" class="hover:text-primary">Home</a></li>
 			<li><a href="/list" class="hover:text-primary">Book List</a></li>
 			<li><a href="/scanner" class="hover:text-primary">Scanner</a></li>
+			{#if session}<li><a href="/transaction" class="hover:text-primary">Transaction</a></li>{/if}
+			{#if role === 'admin'}<li><a href="/report" class="hover:text-primary">Report</a></li>{/if}
+			{#if role === 'admin'}<li><a href="/import" class="hover:text-primary">Import/Export</a></li>{/if}
 			<li><span>{session?.user?.email}</span></li>
 		</ul>
 	</div>
